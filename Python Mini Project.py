@@ -1,38 +1,21 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[7]:
-
-
 import os
-from twilio.rest import Client
-from opensky_api import OpenSkyApi
-account_sid = 'AC697d49374d8ad50ca9def147ad75fcef'
-auth_token = 'bd3a17e965ed68c045fc1fb74c82e1ec'
-# bbox = (min latitude, max latitude, min longitude, max longitude)
-api = OpenSkyApi()
-states = api.get_states(bbox=(12.9050, 13.3191, 77.4656, 77.7588))
-hello=[]
+from twilio.rest import Client     #ImportingSMSAPI
+from opensky_api import OpenSkyApi  #ImportingDataAPI
+account_sid = 'Acquired_sid' #DeclareSMSAPI’sSID
+auth_token = 'AcquiredAuthToken' #DeclareSMSAPI’sAuthToken
+api = OpenSkyApi()#CallingDataAPI
+states = api.get_states(bbox=(45.8389, 47.8229, 5.9962, 10.5226)) #BoundingBoxForRequiredLocation
+hello=[] #DeclareAnEmptyList
 for s in states.states:
-    stateplane="(%r, %r, %r, %r)" % (s.callsign, s.latitude, s.icao24, s.velocity)
-    hello.append(stateplane)
-    #print(hello)
-    listToStr = ''.join(map(str, hello))
-    print(listToStr)  
-client = Client(account_sid, auth_token)
-message = client.messages                 .create(
+    stateplane="(%r, %r, %r)" % (s.callsign, s.geo_altitude, s.vertical_rate,)#AcquireLiveData
+    hello.append(stateplane) #AppendDataToTheList
+    listToStr = ''.join(map(str, hello))#ConvertListToString
+    #print(listToStr)  
+client = Client(account_sid, auth_token)#CallingSMSAPI
+message = client.messages \
+                .create(
 
-                     body=listToStr,
-                     from_='+12516072280',
-                     to='+918867295459'
-                )
-    
-    
-    
-
-
-# In[ ]:
-
-
-#BSK LOCATION (12.9050, 13.3191, 77.4656, 77.7588)
-
+                     body=listToStr, #AssignData
+                     from_='+1xxxxxxxx', #AssignFromNumber
+                     to='+[Country Code][User’s Cell-number]'  #AssignToNumber
+                )    
